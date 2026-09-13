@@ -511,130 +511,50 @@ function normalise(text) {
 }
 
 
-function checkAnswer() {
+async function checkAnswer() {
+    const passage = document.getElementById("passage").value.trim();
+    const question = document.getElementById("question").value.trim();
+    const answer = document.getElementById("answer").value.trim();
 
-    const passage =
-        normalise(document.getElementById("passage").value);
-
-    const question =
-        document.getElementById("question").value.trim();
-
-    const answer =
-        normalise(document.getElementById("answer").value);
-
-    if (!passage) {
-
-        alert("Sila masukkan petikan.");
-
+    if (!passage || !question || !answer) {
+        alert("Sila lengkapkan petikan, soalan dan jawapan.");
         return;
     }
-
-    if (!question) {
-
-        alert("Sila masukkan soalan.");
-
-        return;
-    }
-
-    if (!answer) {
-
-        alert("Sila tulis jawapan terlebih dahulu.");
-
-        return;
-    }
-
-
-    /*
-       Semakan asas:
-
-       1. Semak sama ada perkataan penting
-          daripada jawapan wujud dalam petikan.
-    */
-
-    const words = answer
-        .split(" ")
-        .filter(word => word.length > 3);
-
-
-    let matched = 0;
-
-    words.forEach(word => {
-
-        if (passage.includes(word)) {
-
-            matched++;
-
-        }
-
-    });
-
-
-    let percentage = 0;
-
-    if (words.length > 0) {
-
-        percentage =
-            Math.round((matched / words.length) * 100);
-
-    }
-
-
-    let feedback = "";
-
-    if (percentage >= 70) {
-
-        feedback =
-        "🎉 Tahniah! Jawapan anda mempunyai maklumat yang sepadan dengan petikan. Pastikan jawapan ditulis dalam ayat yang lengkap.";
-
-    }
-
-    else if (percentage >= 40) {
-
-        feedback =
-        "👍 Jawapan anda hampir tepat. Cuba semak semula petikan dan pastikan semua maklumat dalam jawapan benar-benar terdapat dalam teks.";
-
-    }
-
-    else {
-
-        feedback =
-        "🔍 Cuba lagi. Baca petikan dengan teliti dan cari maklumat yang dinyatakan secara jelas. Elakkan menambah maklumat yang tidak terdapat dalam petikan.";
-
-    }
-
-
-    /*
-       Semak ayat lengkap
-    */
-
-    let sentenceFeedback = "";
-
-    if (
-        answer.split(" ").length >= 4 &&
-        /^[A-Z]/.test(
-            document.getElementById("answer").value.trim()
-        )
-    ) {
-
-        sentenceFeedback =
-        "<br><br>✍️ Jawapan anda kelihatan seperti ayat lengkap.";
-
-    } else {
-
-        sentenceFeedback =
-        "<br><br>✍️ Cuba bina jawapan dalam ayat yang lengkap.";
-
-    }
-
 
     document.getElementById("feedbackText").innerHTML =
-        feedback + sentenceFeedback;
+        "🤖 DEPI-BOT sedang menyemak jawapan...";
 
-    document.getElementById("scoreText").innerHTML =
-        "Skor ketepatan: " + percentage + "%";
+    document.getElementById("feedbackBox").style.display = "block";
 
-    document.getElementById("feedbackBox").style.display =
-        "block";
+    try {
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                passage,
+                question,
+                answer
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Ralat berlaku.");
+        }
+
+        document.getElementById("feedbackText").innerHTML =
+            data.result.replace(/\n/g, "<br>");
+
+        document.getElementById("scoreText").innerHTML = "";
+
+    } catch (error) {
+        document.getElementById("feedbackText").innerHTML =
+            "❌ Ralat: " + error.message;
+        document.getElementById("scoreText").innerHTML = "";
+    }
 }
 
 

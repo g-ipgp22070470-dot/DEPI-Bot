@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DEPI-BOT | Maklumat Tersurat</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        margin: 0;
+        background: #f4f7ff;
+        color: #263238;
+    }
+
+    header {
+        background: linear-gradient(135deg, #536dfe, #7c4dff);
+        color: white;
+        padding: 25px;
+        text-align: center;
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 32px;
+    }
+
+    header p {
+        margin: 8px 0 0;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    .card {
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+        color: #536dfe;
+        margin-top: 0;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 160px;
+        border: 2px solid #dfe3f0;
+        border-radius: 12px;
+        padding: 15px;
+        font-size: 16px;
+        resize: vertical;
+        outline: none;
+    }
+
+    textarea:focus {
+        border-color: #536dfe;
+    }
+
+    .question-box {
+        min-height: 100px;
+    }
+
+    button {
+        border: none;
+        border-radius: 12px;
+        padding: 13px 22px;
+        margin: 8px 5px 0 0;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .primary {
+        background: #536dfe;
+        color: white;
+    }
+
+    .secondary {
+        background: #e8eaf6;
+        color: #3949ab;
+    }
+
+    .success {
+        background: #43a047;
+        color: white;
+    }
+
+    .danger {
+        background: #ef5350;
+        color: white;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+    }
+
+    .result {
+        display: none;
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    .hint {
+        background: #fff8e1;
+        border-left: 5px solid #ffb300;
+    }
+
+    .analysis {
+        background: #e8f5e9;
+        border-left: 5px solid #43a047;
+    }
+
+    .feedback {
+        background: #e3f2fd;
+        border-left: 5px solid #1e88e5;
+    }
+
+    .score {
+        font-size: 25px;
+        font-weight: bold;
+        color: #536dfe;
+    }
+
+    .highlight {
+        background: #fff59d;
+        padding: 3px 5px;
+        border-radius: 4px;
+    }
+
+    .steps {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .step {
+        background: #ede7f6;
+        color: #512da8;
+        padding: 10px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .bot {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .bot-icon {
+        width: 45px;
+        height: 45px;
+        background: #536dfe;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .bot-message {
+        background: #f1f3f4;
+        border-radius: 15px;
+        padding: 14px;
+        line-height: 1.5;
+    }
+
+    .footer {
+        text-align: center;
+        padding: 25px;
+        color: #777;
+        font-size: 14px;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🤖 DEPI-BOT</h1>
+    <p>Detektif Petikan Pintar – Membantu Mengenal Pasti Maklumat Tersurat</p>
+</header>
+
+<div class="container">
+
+    <div class="steps">
+        <div class="step">1 📖 Masukkan Petikan</div>
+        <div class="step">2 ❓ Masukkan Soalan</div>
+        <div class="step">3 ✍️ Jawab</div>
+        <div class="step">4 🤖 Semak</div>
+    </div>
+
+    <!-- PETIKAN -->
+    <div class="card">
+
+        <h2>📖 Langkah 1: Masukkan Petikan</h2>
+
+        <label for="passage">
+            Tampal atau taip apa-apa petikan di sini:
+        </label>
+
+        <textarea id="passage"
+        placeholder="Contoh:
+Pada hari Sabtu, Amir dan keluarganya pergi ke Taman Botani. Mereka membawa bekal makanan dan bermain badminton. Pada waktu petang, mereka pulang ke rumah."></textarea>
+
+    </div>
+
+
+    <!-- SOALAN -->
+    <div class="card">
+
+        <h2>❓ Langkah 2: Masukkan Soalan</h2>
+
+        <label for="question">
+            Apakah soalan berdasarkan petikan?
+        </label>
+
+        <textarea id="question"
+        class="question-box"
+        placeholder="Contoh:
+Bilakah Amir dan keluarganya pergi ke Taman Botani?"></textarea>
+
+        <button class="primary" onclick="giveHint()">
+            💡 Beri Petunjuk
+        </button>
+
+        <button class="secondary" onclick="analyseQuestion()">
+            🔎 Analisis Soalan
+        </button>
+
+    </div>
+
+
+    <!-- PETUNJUK -->
+    <div id="hintBox" class="result hint">
+
+        <h3>💡 Petunjuk DEPI-BOT</h3>
+
+        <p id="hintText"></p>
+
+    </div>
+
+
+    <!-- ANALISIS -->
+    <div id="analysisBox" class="result analysis">
+
+        <h3>🔎 Analisis Soalan</h3>
+
+        <p id="analysisText"></p>
+
+    </div>
+
+
+    <!-- JAWAPAN -->
+    <div class="card">
+
+        <h2>✍️ Langkah 3: Tulis Jawapan</h2>
+
+        <label for="answer">
+            Tulis jawapan anda:
+        </label>
+
+        <textarea id="answer"
+        class="question-box"
+        placeholder="Tulis jawapan anda di sini..."></textarea>
+
+        <button class="success" onclick="checkAnswer()">
+            ✅ Semak Jawapan
+        </button>
+
+        <button class="danger" onclick="resetBot()">
+            🗑️ Mula Semula
+        </button>
+
+    </div>
+
+
+    <!-- FEEDBACK -->
+    <div id="feedbackBox" class="result feedback">
+
+        <div class="bot">
+
+            <div class="bot-icon">
+                🤖
+            </div>
+
+            <div class="bot-message">
+
+                <h3>Maklum Balas DEPI-BOT</h3>
+
+                <p id="feedbackText"></p>
+
+                <p class="score" id="scoreText"></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="footer">
+    DEPI-BOT © 2026 | Inovasi Pembelajaran Bahasa Melayu
+</div>
+
+
+<script>
+
+function getQuestionType(question) {
+
+    question = question.toLowerCase();
+
+    if (
+        question.includes("siapa") ||
+        question.includes("siapakah")
+    ) {
+        return "orang";
+    }
+
+    if (
+        question.includes("bila") ||
+        question.includes("bilakah") ||
+        question.includes("masa") ||
+        question.includes("waktu")
+    ) {
+        return "masa";
+    }
+
+    if (
+        question.includes("di mana") ||
+        question.includes("dimana") ||
+        question.includes("tempat")
+    ) {
+        return "tempat";
+    }
+
+    if (
+        question.includes("mengapa") ||
+        question.includes("kenapa")
+    ) {
+        return "sebab";
+    }
+
+    if (
+        question.includes("bagaimana")
+    ) {
+        return "cara";
+    }
+
+    if (
+        question.includes("berapa")
+    ) {
+        return "jumlah";
+    }
+
+    if (
+        question.includes("apakah") ||
+        question.includes("apa")
+    ) {
+        return "maklumat";
+    }
+
+    return "maklumat";
+}
+
+
+function giveHint() {
+
+    const question =
+        document.getElementById("question").value.trim();
+
+    if (!question) {
+
+        alert("Sila masukkan soalan terlebih dahulu.");
+
+        return;
+    }
+
+    const type = getQuestionType(question);
+
+    let hint = "";
+
+    if (type === "orang") {
+
+        hint =
+        "🔍 Cari nama individu atau watak yang disebut dalam petikan.";
+
+    } else if (type === "masa") {
+
+        hint =
+        "⏰ Cari maklumat yang menunjukkan masa, hari atau waktu dalam petikan.";
+
+    } else if (type === "tempat") {
+
+        hint =
+        "📍 Cari nama tempat atau lokasi yang dinyatakan dalam petikan.";
+
+    } else if (type === "sebab") {
+
+        hint =
+        "💭 Cari maklumat yang menerangkan sebab atau punca sesuatu berlaku.";
+
+    } else if (type === "cara") {
+
+        hint =
+        "📝 Cari maklumat yang menerangkan bagaimana sesuatu dilakukan.";
+
+    } else if (type === "jumlah") {
+
+        hint =
+        "🔢 Cari nombor atau maklumat yang menunjukkan jumlah.";
+
+    } else {
+
+        hint =
+        "🔎 Baca petikan dan cari maklumat yang dinyatakan secara jelas.";
+
+    }
+
+    document.getElementById("hintText").innerHTML = hint;
+
+    document.getElementById("hintBox").style.display = "block";
+}
+
+
+function analyseQuestion() {
+
+    const question =
+        document.getElementById("question").value.trim();
+
+    if (!question) {
+
+        alert("Sila masukkan soalan.");
+
+        return;
+    }
+
+    const type = getQuestionType(question);
+
+    let explanation = "";
+
+    const types = {
+
+        orang:
+        "Soalan ini meminta maklumat tentang orang atau watak.",
+
+        masa:
+        "Soalan ini meminta maklumat tentang masa atau waktu.",
+
+        tempat:
+        "Soalan ini meminta maklumat tentang tempat atau lokasi.",
+
+        sebab:
+        "Soalan ini meminta sebab atau punca sesuatu berlaku.",
+
+        cara:
+        "Soalan ini meminta cara atau kaedah sesuatu dilakukan.",
+
+        jumlah:
+        "Soalan ini meminta maklumat berbentuk jumlah atau bilangan.",
+
+        maklumat:
+        "Soalan ini meminta maklumat yang dinyatakan secara jelas dalam petikan."
+    };
+
+    explanation = types[type];
+
+    document.getElementById("analysisText").innerHTML =
+        explanation +
+        "<br><br>🎯 Fokus: Cari jawapan yang terdapat secara langsung dalam petikan.";
+
+    document.getElementById("analysisBox").style.display =
+        "block";
+}
+
+
+function normalise(text) {
+
+    return text
+        .toLowerCase()
+        .replace(/[.,!?;:()"']/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+
+function checkAnswer() {
+
+    const passage =
+        normalise(document.getElementById("passage").value);
+
+    const question =
+        document.getElementById("question").value.trim();
+
+    const answer =
+        normalise(document.getElementById("answer").value);
+
+    if (!passage) {
+
+        alert("Sila masukkan petikan.");
+
+        return;
+    }
+
+    if (!question) {
+
+        alert("Sila masukkan soalan.");
+
+        return;
+    }
+
+    if (!answer) {
+
+        alert("Sila tulis jawapan terlebih dahulu.");
+
+        return;
+    }
+
+
+    /*
+       Semakan asas:
+
+       1. Semak sama ada perkataan penting
+          daripada jawapan wujud dalam petikan.
+    */
+
+    const words = answer
+        .split(" ")
+        .filter(word => word.length > 3);
+
+
+    let matched = 0;
+
+    words.forEach(word => {
+
+        if (passage.includes(word)) {
+
+            matched++;
+
+        }
+
+    });
+
+
+    let percentage = 0;
+
+    if (words.length > 0) {
+
+        percentage =
+            Math.round((matched / words.length) * 100);
+
+    }
+
+
+    let feedback = "";
+
+    if (percentage >= 70) {
+
+        feedback =
+        "🎉 Tahniah! Jawapan anda mempunyai maklumat yang sepadan dengan petikan. Pastikan jawapan ditulis dalam ayat yang lengkap.";
+
+    }
+
+    else if (percentage >= 40) {
+
+        feedback =
+        "👍 Jawapan anda hampir tepat. Cuba semak semula petikan dan pastikan semua maklumat dalam jawapan benar-benar terdapat dalam teks.";
+
+    }
+
+    else {
+
+        feedback =
+        "🔍 Cuba lagi. Baca petikan dengan teliti dan cari maklumat yang dinyatakan secara jelas. Elakkan menambah maklumat yang tidak terdapat dalam petikan.";
+
+    }
+
+
+    /*
+       Semak ayat lengkap
+    */
+
+    let sentenceFeedback = "";
+
+    if (
+        answer.split(" ").length >= 4 &&
+        /^[A-Z]/.test(
+            document.getElementById("answer").value.trim()
+        )
+    ) {
+
+        sentenceFeedback =
+        "<br><br>✍️ Jawapan anda kelihatan seperti ayat lengkap.";
+
+    } else {
+
+        sentenceFeedback =
+        "<br><br>✍️ Cuba bina jawapan dalam ayat yang lengkap.";
+
+    }
+
+
+    document.getElementById("feedbackText").innerHTML =
+        feedback + sentenceFeedback;
+
+    document.getElementById("scoreText").innerHTML =
+        "Skor ketepatan: " + percentage + "%";
+
+    document.getElementById("feedbackBox").style.display =
+        "block";
+}
+
+
+function resetBot() {
+
+    document.getElementById("passage").value = "";
+
+    document.getElementById("question").value = "";
+
+    document.getElementById("answer").value = "";
+
+    document.getElementById("hintBox").style.display =
+        "none";
+
+    document.getElementById("analysisBox").style.display =
+        "none";
+
+    document.getElementById("feedbackBox").style.display =
+        "none";
+
+}
+
+</script>
+
+</body>
+</html>
